@@ -1,0 +1,31 @@
+"""
+===================================
+Class Name: <ClassName>
+===================================
+Description:
+    <Brief description of what the class does and its purpose>
+
+Attributes:
+    <attribute1> : <type>
+        <description of attribute1>
+    <attribute2> : <type>
+        <description of attribute2>
+    ...
+    
+Methods:
+    <method1>(self, <parameters>)
+        <Brief description of method1>
+    <method2>(self, <parameters>)
+        <Brief description of method2>
+    ...
+    
+Usage Example:
+    <Provide a small code example showing how to use the class>
+
+Author:
+    <Your Name>
+
+Date:
+    <Date of creation or last update>
+
+"""

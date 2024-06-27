@@ -27,15 +27,10 @@
     <button onclick="userToggleAllNodes()">すべて展開/折りたたむ</button>
   </div>
   
-  <label for="level-control">展開/折りたたみレベル:</label>
+  <label for="level-control">レベルごと展開/折りたたみ</label>
   <div id="level-control">
-      <input type="radio" id="level1" name="level" value="1" onchange="expandCollapseLevel(this.value)">
-      <label for="level1">Level 1</label>
-      <input type="radio" id="level2" name="level" value="2" onchange="expandCollapseLevel(this.value)">
-      <label for="level2">Level 2</label>
-      <input type="radio" id="level3" name="level" value="3" onchange="expandCollapseLevel(this.value)">
-      <label for="level3">Level 3</label>
-      <!-- Add more levels as needed -->
+    <button id="toggle-button" onclick="toggleExpandCollapselevel1()">事業本部</button>
+    <button id="toggle-button" onclick="toggleExpandCollapselevel2()">事業部</button>
   </div>
   
   
