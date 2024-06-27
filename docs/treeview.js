@@ -105,6 +105,7 @@ class TreeView {
   
   // parse json data 
   fetchJsonData() {
+  
     // HTTP get request 
     return fetch(this.graphFile, {
       headers: { 'Content-Type': 'application/json; charset=utf-8' }
@@ -179,16 +180,16 @@ Diagram functionalities
 
 // Function to change the company graph based on user 'business id' input  
 function changeCompanyGraph() {
-// get corporate number from user input 
-const newGraphFile = document.getElementById('corporate_number_input').value + ".json";
+  // get corporate number from user input 
+  const newGraphFile = document.getElementById('corporate_number_input').value + ".json";
 
-// destroy previous 
-if (diagramObject) {
-  diagramObject.destroy();
-}
+  // destroy previous 
+  if (diagramObject) {
+    diagramObject.destroy();
+  }
 
-diagramObject = new TreeView(newGraphFile);
-diagramObject.init();
+  diagramObject = new TreeView(newGraphFile);
+  diagramObject.init();
 }
 
 
@@ -220,5 +221,18 @@ expanseCollapseFlagArray[expandCollapseAllIndex] = !expanseCollapseFlagArray[exp
 
 
 
+async function getCreateNodeAPI() {
+  const url = 'https://fdinzk1cn9.execute-api.ap-northeast-1.amazonaws.com/dev/fetchCompanyNodeData?corporate_number=455';
 
+  try {
+    // Highlight: Using await to wait for the fetch promise to resolve
+    const response = await fetch(url);
+    const data = await response.json();
+    console.log('Data fetched:', data);
+  } 
+  catch (error) {
+      console.error('Error fetching data:', error);
+  }
+}
+getCreateNodeAPI()
 
