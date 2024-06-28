@@ -1,0 +1,8 @@
+# 環境変数について
+
+`.env` ファイルを設定してください
+
+```
+PAPATTO_USERNAME=SET_YOUR_USERNAME
+PAPATTO_PASSWORD=SET_YOUR_PASSWORD
+```
