@@ -1,29 +1,27 @@
 import json
-from createNode import getCompanyNode # function
+from getCompanyNode import getCompanyJson # function
 def lambda_handler(event, context):
     # Extract query string parameters
-    x = event['queryStringParameters']['x']
-    y = event['queryStringParameters']['y']
-    op = event['queryStringParameters']['op']
-    
+    corporate_number = event['queryStringParameters']['corporate_number']
+
     # Log inputs
-    print(f"x:{x}, y:{y}, op:{op}")
+    print(f"corporate_number:{corporate_number}")
     
-    # test (fake) corporate number 
-    str cor_num = "4242"
     # Prepare the response body
     res_body = {
-        'x': int(x),
-        'y': int(y),
-        'op': op,
-        'ans': getCompanyNode(cor_num)
+        'corporate_number': int(corporate_number),
+        'ans': getCompanyJson(corporate_number)
     }
     
     # Prepare HTTP response
     http_res = {
         'statusCode': 200,
         'headers': {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            # CORS policy
+            "Access-Control-Allow-Headers" : "Content-Type",
+            "Access-Control-Allow-Origin": "https://www.example.com",
+            "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
         },
         'body': json.dumps(res_body)
     }

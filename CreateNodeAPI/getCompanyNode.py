@@ -20,14 +20,14 @@ def createCompanyNameCol(df,companyName:str):
     df["companyName"] = companyName
     return df 
 
-def getCompanyNode(corporate_number :str): 
-    companyName = "mitsui.csv"
+ 
+def getCompanyJson(corporate_number :str): 
     
     # Specify columns to fill the empty cells 
     col_pairs = [("headquarter", "division"), ("division", "department"), ("department", "section")]  
     
     # Get data from papatto, convert to CSV 
-    unfilled_corporate_df = get_unfilled_company_df() 
+    unfilled_corporate_df = get_unfilled_company_df(companyName=corporate_number) 
     print("Unfilled corporate DataFrame:")
     
     # Fill the empty cells with empty "missing" notation by using subsequent columns as a reference 
@@ -36,13 +36,17 @@ def getCompanyNode(corporate_number :str):
     print("Filled corporate DataFrame:")
 
     # Create root companyname column
-    filled_corporate_df = createCompanyNameCol(filled_corporate_df, companyName=companyName)
+    filled_corporate_df = createCompanyNameCol(filled_corporate_df, companyName=corporate_number)
     print("Corporate DataFrame with company name column:")
     # print(filled_corporate_df)
 
     # Convert DataFrame to JSON node format
     NodeConvertObj = DataframeToNodeConverter(df=filled_corporate_df)
-    json_data = NodeConvertObj.convert() # returns json in string 
+    display_data = NodeConvertObj.convert() # returns json in string 
     print("JSON output in string")
+    
+    # == for Copy and paste google sheet == 
+    copy_paste_data  = filled_corporate_df.to_dict(orient='records')
 
-    return json_data
+    return display_data, copy_paste_data
+    

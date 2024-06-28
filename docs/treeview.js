@@ -1,14 +1,18 @@
 // responsible for setting up treeview using companies node data 
 class TreeView {
 
-  constructor(graphFile) {
-      this.myDiagram = null; 
-      this.graphFile = graphFile;
-      this.jsonData = null;  
+  constructor(corporate_number) {
+    
+      this.myDiagram = null;  
+      this.corporate_number = corporate_number;
+
+      //data 
+      this.jsonData = null; 
+      this.csvData = null; 
   }
 
   init() {
-      this.fetchJsonData().then(data => {
+      this.getNodeDataViaAPI().then(data => {
         this.jsonData = data;
         this.setupDiagram();
       });
@@ -103,15 +107,34 @@ class TreeView {
     this.myDiagram.findTreeRoots().each(r => r.expandTree(0));
   }
   
-  // parse json data 
-  fetchJsonData() {
+
+  async getNodeDataViaAPI() {
+    // make url 
+    let base_url  = 'https://fdinzk1cn9.execute-api.ap-northeast-1.amazonaws.com/dev/fetchCompanyNodeData?corporate_number='
+    const query_url = base_url  +  this.corporate_number; 
+    console.log(query_url)
+    let nodeData = null; 
+
+    try {
+      const response = await fetch(query_url);
+      const data = await response.json();
+      nodeData = data.display_data
+      console.log(data)
+
+      // save the csv version for copying out google sheet 
+      this.csvData = data.copy_paste_data // MODIFY
+
+      // show data use for display treeview 
+      console.log('Data fetched:', nodeData);  
+    } 
   
-    // HTTP get request 
-    return fetch(this.graphFile, {
-      headers: { 'Content-Type': 'application/json; charset=utf-8' }
-    })
-    // response handling 
-    .then(response => response.json());
+    catch (error) {
+        console.error('Error fetching data:', error);
+    }
+
+      
+    return JSON.parse(nodeData); // convert a string of an array of json object represent company node data
+  
   }
 
   // destroy tree view instance (use for switching tree view for other companies)
@@ -151,6 +174,11 @@ class TreeView {
     }
      
   }
+
+  // get csv data so user can copy and paste to google sheet 
+  getCsvData(){
+    return this.csvData
+  }
    
 
 }; // end of TreeView class 
@@ -167,8 +195,7 @@ let diagramObject;
 let expanseCollapseFlagArray = [true, true, true]; // expand/collapse all, e/c 事業部 , e/collapse 部 
 
 document.addEventListener('DOMContentLoaded', () => {
-diagramObject  = new TreeView("3180301014273.json");
-diagramObject.init();
+
 });
 
 
@@ -181,14 +208,14 @@ Diagram functionalities
 // Function to change the company graph based on user 'business id' input  
 function changeCompanyGraph() {
   // get corporate number from user input 
-  const newGraphFile = document.getElementById('corporate_number_input').value + ".json";
+  const corporate_number = document.getElementById('corporate_number_input').value;
 
   // destroy previous 
   if (diagramObject) {
     diagramObject.destroy();
   }
 
-  diagramObject = new TreeView(newGraphFile);
+  diagramObject = new TreeView(corporate_number);
   diagramObject.init();
 }
 
@@ -221,18 +248,27 @@ expanseCollapseFlagArray[expandCollapseAllIndex] = !expanseCollapseFlagArray[exp
 
 
 
-async function getCreateNodeAPI() {
-  const url = 'https://fdinzk1cn9.execute-api.ap-northeast-1.amazonaws.com/dev/fetchCompanyNodeData?corporate_number=455';
 
-  try {
-    // Highlight: Using await to wait for the fetch promise to resolve
-    const response = await fetch(url);
-    const data = await response.json();
-    console.log('Data fetched:', data);
-  } 
-  catch (error) {
-      console.error('Error fetching data:', error);
-  }
+function copyToClipboard() {
+  const data = diagramObject.getCsvData()
+  // Convert the data to a tab-delimited string
+  let clipboardText = "headquarter\tdivision\tdepartment\tsection\tsite\n"; // Header row
+  data.forEach(row => {
+      clipboardText += `${row.headquarter}\t${row.division}\t${row.department}\t${row.section}\t${row.site}\n`;
+  });
+
+  // Create a temporary textarea element to hold the text
+  const tempTextArea = document.createElement("textarea");
+  tempTextArea.value = clipboardText;
+  document.body.appendChild(tempTextArea);
+
+  // Select the text and copy it to the clipboard
+  tempTextArea.select();
+  document.execCommand("copy");
+
+  // Remove the temporary textarea
+  document.body.removeChild(tempTextArea);
+
+  alert("Data copied to clipboard. You can now paste it into Google Sheets.");
 }
-getCreateNodeAPI()
 
