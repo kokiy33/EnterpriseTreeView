@@ -24,10 +24,10 @@ class DataframeToNodeConverter:
         self.__unique_key = 1
 
     def convert(self):
+        """returns a list of dictionaries represent child and parent relationships"""
         self.__create_search_key()
         self.__create_nodes()
-        json_string = json.dumps(self.__nodes , ensure_ascii=False, indent=4)
-        return json_string
+        return self.__nodes
 
     def __create_search_key(self):
         source_column = ["companyName","headquarter", "division", "department", "section", "site"]

@@ -27,7 +27,7 @@ class FillEmptyUnit:
         self.col_pairs = col_pairs
         self.replacementDictionary = {}
 
-    def set_dictionary(self, col_fill, col_reference):
+    def get_dictionary(self, col_reference):
         """Initialize an empty dictionary and fill it with unique values from the reference column."""
         unique_dict = {}
         for _, row in self.df.iterrows():
@@ -35,19 +35,30 @@ class FillEmptyUnit:
             value = "missing_" + str(key)
             if key not in unique_dict:
                 unique_dict[key] = value
-        unique_dict[""] = "missing_" + col_fill  # add empty string case
-        self.replacementDictionary[(col_fill, col_reference)] = unique_dict
+        return unique_dict
 
-    
+    def fill_all_missing_with_unique_string(self):
+        """Fill all missing values in the DataFrame with an empty string."""
+        self.df = self.df.replace("", "N/A")
+
+
     def fill_empty_cells(self):
         """Fill the empty cells in the DataFrame based on the reference columns."""
         for col_fill, col_reference in self.col_pairs:
-            self.set_dictionary(col_fill, col_reference)
+            replacement_dictionary = self.get_dictionary(col_reference)
             for index, row in self.df.iterrows():
-                if pd.isna(row[col_fill]):
-                    self.df.loc[index, col_fill] = self.replacementDictionary[(col_fill, col_reference)][row[col_reference]]
+                # only fill missing value if interest of fill column is empty and the reference column is not empty 
+                # e.g. "headquarter" = missing and "division" = r&d lexus 
+                if str(row[col_fill]) == "N/A" :
+                    self.df.loc[index, col_fill] = replacement_dictionary[row[col_reference]]
 
-    def get_dataframe(self):
+    def get_updated_dataframe(self):
         """Return the updated DataFrame."""
+        self.fill_all_missing_with_unique_string()
         self.fill_empty_cells()
         return self.df
+
+    def get_dataframe(self): 
+        return self.df
+    
+ 

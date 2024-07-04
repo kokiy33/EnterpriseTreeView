@@ -117,15 +117,16 @@ class TreeView {
 
     try {
       const response = await fetch(query_url);
+      console.log('received http full response : ')
       const data = await response.json();
-      nodeData = data.display_data
-      console.log(data)
+       
+      nodeData = JSON.parse(data.body).display_data
 
       // save the csv version for copying out google sheet 
       this.csvData = data.copy_paste_data // MODIFY
 
       // show data use for display treeview 
-      console.log('Data fetched:', nodeData);  
+      console.log('Node Data fetched:', nodeData);  
     } 
   
     catch (error) {
