@@ -1,4 +1,5 @@
 from org_info.model import OrgInfo
+from typing import List
 
 class OrgInfoCompleter:
 

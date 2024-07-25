@@ -1,6 +1,5 @@
 import json
-from getCompanyNode import getCompanyJson # function
-import base64
+from get_treeview_data import getCompanyJson # function
 
 def lambda_handler(event,context):
     # Extract query string parameters
@@ -10,8 +9,8 @@ def lambda_handler(event,context):
     print(f"corporate_number:{corporate_number}")
 
     # # returns a list of dict element
-    treeview_data = getCompanyJson(corporate_number)
-
+    treeview_data, copy_paste_data = getCompanyJson(corporate_number)
+    
     # Prepare the response body2
     res_body = {
         'corporate_number': int(corporate_number),
