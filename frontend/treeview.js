@@ -107,7 +107,7 @@ class TreeView {
     this.myDiagram.findTreeRoots().each(r => r.expandTree(0));
   }
   
-
+  // @Todo3 
   async getNodeDataViaAPI() {
     // make url 
     let base_url  = 'https://fdinzk1cn9.execute-api.ap-northeast-1.amazonaws.com/dev/fetchCompanyNodeData?corporate_number='
